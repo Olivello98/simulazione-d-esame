@@ -48,8 +48,25 @@ public class CrimesController {
 
     @FXML
     void doCreaReteCittadina(ActionEvent event) {
-    	model.createGraph();
+    	String s = "";
+    	int anno = boxAnno.getValue();
+    	if(anno!=0) {
+    	model.createGraph(anno);
+    	}
+    	else {
+    		txtResult.appendText("Inserisci un anno, capra!");
+    		return;
+    		}
+    	
+    	
+    	for(int i = 1 ;i <=7; i++) {
+    	s +="L'elenco dei distretti ordinati per il distretto "+i+" è: "+ model.getDistrettiOrdinati(i)+"\n";	
+    	}
+    	txtResult.appendText(s);
     }
+    
+   
+    
 
     @FXML
     void doSimula(ActionEvent event) {

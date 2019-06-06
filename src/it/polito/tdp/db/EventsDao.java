@@ -132,14 +132,16 @@ public class EventsDao {
 			PreparedStatement st = conn.prepareStatement(sql) ;
 			
 			Map<Integer,LatLng> MappaCentri = new HashMap<Integer,LatLng>() ;
+		
 			st.setInt(1,anno);
 			ResultSet res = st.executeQuery() ;
-		
+			
 			while(res.next()) {
 				try {
-				MappaCentri.put(res.getInt("district_id"), new LatLng(res.getDouble("AVG(geo_lon)"),res.getDouble("AVG(geo_lat)")));
-				
-				
+			LatLng l =new LatLng(res.getDouble("AVG(geo_lat)"),res.getDouble("AVG(geo_lon)"));
+					
+				MappaCentri.put(res.getInt("district_id"), l);
+			
 			}
 			catch (Throwable t) {
 			t.printStackTrace();
