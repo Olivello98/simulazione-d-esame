@@ -5,9 +5,13 @@
 package it.polito.tdp.crimes;
 
 import java.net.URL;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.model.Model;
+import it.polito.tdp.model.Simulatore;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,6 +23,7 @@ public class CrimesController {
 
 	private Model model = new Model();
 	
+	int anno ;
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
 
@@ -29,10 +34,10 @@ public class CrimesController {
     private ComboBox<Integer> boxAnno; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxMese"
-    private ComboBox<?> boxMese; // Value injected by FXMLLoader
+    private ComboBox<Month> boxMese; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxGiorno"
-    private ComboBox<?> boxGiorno; // Value injected by FXMLLoader
+    private ComboBox<Integer> boxGiorno; // Value injected by FXMLLoader
 
     @FXML // fx:id="btnCreaReteCittadina"
     private Button btnCreaReteCittadina; // Value injected by FXMLLoader
@@ -49,7 +54,7 @@ public class CrimesController {
     @FXML
     void doCreaReteCittadina(ActionEvent event) {
     	String s = "";
-    	int anno = boxAnno.getValue();
+    	 anno = boxAnno.getValue();
     	if(anno!=0) {
     	model.createGraph(anno);
     	}
@@ -63,14 +68,35 @@ public class CrimesController {
     	s +="L'elenco dei distretti ordinati per il distretto "+i+" è: "+ model.getDistrettiOrdinati(i)+"\n";	
     	}
     	txtResult.appendText(s);
-    }
+    	List<Integer> l = new ArrayList<Integer>();
+    	for(int i = 1 ; i<=31; i++) {
+    		l.add(i);
+    	}
+    	boxMese.getItems().addAll(Month.values());
+    	boxGiorno.getItems().addAll(l);
+    	}
     
-   
+    
+    
+  
     
 
     @FXML
     void doSimula(ActionEvent event) {
-
+    	txtResult.clear();
+    int h = Integer.parseInt(	txtN.getText());
+    if((h<1)||(h>10)) {
+    	txtResult.appendText("Devi inserire una N da 1 a 10");
+    	return;
+    }
+    int j = model.getDistrettoCrimineMinore(anno);
+    int i = boxMese.getValue().getValue();
+    int f = boxGiorno.getValue().intValue();
+    
+    Simulatore s = new Simulatore(h,anno,i,f);	
+    s.simulate();
+    txtResult.appendText("Gli eventi mal gestiti nella simulazione sono stati : "+s.getEventiMalGestiti());
+    		
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

@@ -21,12 +21,15 @@ import it.polito.tdp.db.EventsDao;
 
 public class Model implements Comparator<Integer>{
 	private EventsDao dao ;
+	private int N;
+	
 	 private Graph<Integer,DefaultWeightedEdge> grafo;
 	 private Map<Integer,LatLng> MappaCentri;
 	 List<LatLng> Lista;
 	
 	public Model() {
 		this.dao = new EventsDao();
+		
 		}
 	
 	public List<Integer> getListaAnni() {
@@ -82,6 +85,7 @@ public class Model implements Comparator<Integer>{
 			DefaultWeightedEdge e2 = grafo.getEdge(d,d2);
 			Double peso1 = grafo.getEdgeWeight(e1);
 			Double peso2 = grafo.getEdgeWeight(e2);
+			System.out.println(peso1+peso2);
 					return peso1.compareTo(peso2);
 
 		}
@@ -89,25 +93,28 @@ public class Model implements Comparator<Integer>{
 			return ListaDistretti;
 			
 		}
-		
-
-
-	
-//	public Distretto getDistretti(int h){
-////		Map<Integer,Distretto> mappa= new HashMap<Integer,Distretto>();
-////		for(int i : this.grafo.vertexSet()) {
-////			mappa.put(i, new Distretto(i));
-////		}
-////		return mappa;
-//		return new Distretto(h);
-////		
-//	}
-
 	@Override
 	public int compare(Integer arg0, Integer arg1) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	public int getDistrettoCrimineMinore(int anno) {
+		return dao.DistrettoCrimineMinore(anno);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	
 	}

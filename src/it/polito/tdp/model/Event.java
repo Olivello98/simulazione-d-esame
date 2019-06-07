@@ -2,7 +2,9 @@ package it.polito.tdp.model;
 
 import java.time.LocalDateTime;
 
-public class Event {
+
+
+public class Event implements Comparable<Event>{
 	
 	private Long incident_id;
 	private Integer offense_code;
@@ -18,11 +20,22 @@ public class Event {
 	private String neighborhood_id;
 	private Integer is_crime;
 	private Integer is_traffic;
+	public eventTypeEnum tipo;
+	public gestioneEvento gestione;
 	
+	
+	public gestioneEvento getGestione() {
+		return gestione;
+	}
+
+	public void setGestione(gestioneEvento gestione) {
+		this.gestione = gestione;
+	}
+
 	public Event(Long incident_id, Integer offense_code, Integer offense_code_extension, String offense_type_id,
 			String offense_category_id, LocalDateTime reported_date, String incident_address, double geo_lon,
 			double geo_lat, Integer district_id, Integer precinct_id, String neighborhood_id, Integer is_crime,
-			Integer is_traffic) {
+			Integer is_traffic, eventTypeEnum tipo, gestioneEvento gestione) {
 		super();
 		this.incident_id = incident_id;
 		this.offense_code = offense_code;
@@ -38,7 +51,30 @@ public class Event {
 		this.neighborhood_id = neighborhood_id;
 		this.is_crime = is_crime;
 		this.is_traffic = is_traffic;
+		if(offense_type_id.compareTo("all_other_crimes")==0) 
+			this.tipo = eventTypeEnum.ALL_OTHERS12;
+			else this.tipo = eventTypeEnum.OTHERS_2;
+			this.gestione = gestione;
 	}
+
+
+
+	public eventTypeEnum getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(eventTypeEnum tipo) {
+		this.tipo = tipo;
+	}
+
+	public enum eventTypeEnum {//l'evento ben gestito libera l'agente e ne aggiorna la posizione al luogo dell'evento appena risolto
+	ALL_OTHERS12 , OTHERS_2 //l'evento mal gestito lo stesso
+	};
+	
+	public enum gestioneEvento{
+		EVENTO_BEN_GESTITO, EVENTO_MAL_GESTITO
+	};
+	
 	
 	public Long getIncident_id() {
 		return incident_id;
@@ -154,6 +190,12 @@ public class Event {
 	public String toString() {
 		return "Event [incident_id=" + incident_id + ", offense_category_id=" + offense_category_id + ", reported_date="
 				+ reported_date + ", district_id=" + district_id + "]";
+	}
+
+	@Override
+	public int compareTo(Event arg0) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	

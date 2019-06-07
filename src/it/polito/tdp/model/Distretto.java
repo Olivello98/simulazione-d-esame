@@ -14,11 +14,6 @@ public class Distretto {
 	private LatLng centro;
 	private Map<Distretto,DefaultWeightedEdge> MappaDistretti = new HashMap<Distretto,DefaultWeightedEdge>(m.getDistrettiVicini(this.id));
 	
-	
-	
-	
-	
-	
 	public Distretto(int id, LatLng centro) {
 		super();
 		this.id = id;

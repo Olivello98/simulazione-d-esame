@@ -11,20 +11,26 @@ import java.util.Map;
 
 import com.javadocmd.simplelatlng.LatLng;
 
+import it.polito.tdp.model.Distretto;
 import it.polito.tdp.model.Event;
+import it.polito.tdp.model.Event.eventTypeEnum;
+import it.polito.tdp.model.Event.gestioneEvento;
 
 
 public class EventsDao {
-	
-	public List<Event> listAllEvents(){
-		String sql = "SELECT * FROM events" ;
+	Map<Integer,LatLng> MappaCentri;
+	public List<Event> listAllEvents(int anno, int mese , int giorno){
+		String sql = "SELECT * FROM events WHERE YEAR(reported_date)= ? AND MONTH(reported_date) = ? AND DAY(reported_date) = ? "
+				+ "ORDER BY reported_date" ;
 		try {
 			Connection conn = DBConnect.getConnection() ;
 
 			PreparedStatement st = conn.prepareStatement(sql) ;
 			
 			List<Event> list = new ArrayList<>() ;
-			
+			st.setInt(1, anno);
+			st.setInt(2, mese);
+			st.setInt(3, giorno);
 			ResultSet res = st.executeQuery() ;
 			
 			while(res.next()) {
@@ -42,7 +48,7 @@ public class EventsDao {
 							res.getInt("precinct_id"), 
 							res.getString("neighborhood_id"),
 							res.getInt("is_crime"),
-							res.getInt("is_traffic")));
+							res.getInt("is_traffic"),eventTypeEnum.OTHERS_2,gestioneEvento.EVENTO_BEN_GESTITO));
 				} catch (Throwable t) {
 					t.printStackTrace();
 					System.out.println(res.getInt("id"));
@@ -159,6 +165,7 @@ public class EventsDao {
 		}
 		}	
 	public List<LatLng> MappaPunti(Integer anno, Integer distretto){
+
 		String sql = " SELECT district_id ,geo_lon, geo_lat" + 
 				" FROM EVENTS" + 
 				" WHERE YEAR(reported_date) = ?" + 
@@ -194,7 +201,60 @@ public class EventsDao {
 			return null ;
 		}
 		}		
-}
+
+
+	public Integer DistrettoCrimineMinore(int anno){
+		String sql = "SELECT id" + 
+				" FROM (SELECT	district_id	AS id, COUNT(is_crime) AS cnt" + 
+				" FROM EVENTS e1" + 
+				" WHERE YEAR(reported_date) = ? " + 
+				" GROUP BY district_id) AS t1" + 
+				" WHERE cnt = (SELECT MIN(cnt) FROM(SELECT	district_id	AS id, COUNT(is_crime) AS cnt" + 
+				" FROM EVENTS e1" + 
+				" WHERE YEAR(reported_date) = ? " + 
+				" GROUP BY district_id) AS t2)"  	;
+		try {
+			Connection conn = DBConnect.getConnection() ;
+
+			PreparedStatement st = conn.prepareStatement(sql) ;
+			
+			
+			int h = 0;
+			st.setInt(1,anno);
+			st.setInt(2, anno);
+			ResultSet res = st.executeQuery() ;
+			
+			while(res.next()) {
+				try {
+			
+					
+				h = res.getInt("id");
+			
+			}
+			catch (Throwable t) {
+			t.printStackTrace();
+			System.out.println(res.getInt("id"));
+		}
+				}
+			
+			conn.close();
+			return h;
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null ;
+		}
+		}
+		
+	
+	
+	
+	
+	}
+
+
+
 	
 
 
